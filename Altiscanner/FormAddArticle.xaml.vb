@@ -86,7 +86,9 @@ Public Class FormAddArticle
 
             For i As Long = 0 To lines.Count - 1
 
-                If lines(i).Contains(TextBoxCode.Text) And TextBoxCode.Text <> "" Then  ' Si le code existe déjà
+                Dim splitComma As String() = lines(i).Split(",")
+
+                If splitComma(0) = TextBoxCode.Text Then ' Si le code existe déjà
 
                     MessageBox.Show("Ce code barre existe déjà.", "Erreur")
                     TextBoxCode.Clear()
@@ -129,21 +131,29 @@ Public Class FormAddArticle
 
                 For i As Long = 0 To lines.Count - 1
 
-                    If lines(i) = lines(ListViewAddArticle.SelectedIndex + 1) Then  'On test l'article avant modification
+                    If lines(i) = lines(ListViewAddArticle.SelectedIndex + 1) Then
 
                         Dim splitComma As String() = lines(i).Split(",")
 
-                        If splitComma(0) = TextBoxCode.Text Then
+                        If splitComma(0) = TextBoxCode.Text And splitComma(1) = TextBoxCodeArt.Text And splitComma(2) = TextBoxLibelle.Text And splitComma(3) = TextBoxUnite.Text Then 'Si aucune modifcation
+
+                            MessageBox.Show("Rien à modifier.", "Erreur")
+                            Exit Sub
+
+                        ElseIf splitComma(0) = TextBoxCode.Text Then 'Si modification sauf code barre
 
                             lines(i) = splitComma(0) + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + splitComma(4) 'Stock dans la variable la string
 
                             File.WriteAllLines("C:\Users\lange\Documents\test.csv", lines)
                             ListViewAddArticle.Items(ListViewAddArticle.SelectedIndex) = New Data(splitComma(0), TextBoxCodeArt.Text, TextBoxLibelle.Text, TextBoxUnite.Text, splitComma(4))
 
-                        ElseIf splitComma(0) <> TextBoxCode.Text Then 'Si code modifié
+                        ElseIf splitComma(0) <> TextBoxCode.Text Then 'Si code barre modifié
 
                             MessageBox.Show("""Code barre"" ne peut pas être modifié.", "Erreur")
                             TextBoxCode.Text = splitComma(0)
+                            TextBoxCodeArt.Text = splitComma(1)
+                            TextBoxLibelle.Text = splitComma(2)
+                            TextBoxUnite.Text = splitComma(3)
                             Exit Sub
 
                         End If
