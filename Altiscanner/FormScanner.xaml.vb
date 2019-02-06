@@ -2,7 +2,6 @@
 
 Public Class FormScanner
 
-
     Private Sub BtnReturnMenu_Click(sender As Object, e As RoutedEventArgs) Handles BtnReturnMenu.Click
 
         Dim Accueil As New MainWindow
@@ -32,6 +31,12 @@ Public Class FormScanner
 
     End Class
 
+
+    Public Sub New() 'Focus sur la textBox du Code pour recevoir le scan
+        InitializeComponent()
+        TextBoxCode.Focus()
+    End Sub
+
     '----------------------------------------------- VALIDER SCAN -----------------------------------------------'
 
     Private Sub BtnValidate_Click(sender As Object, e As RoutedEventArgs) Handles BtnValidate.Click
@@ -43,7 +48,6 @@ Public Class FormScanner
         Else
 
             Dim lines() As String = IO.File.ReadAllLines("C:\Users\lange\Documents\test.csv")
-            Dim inputString As String = TextBoxCode.Text + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," 'Stock dans la variable la string
 
             For i As Long = 0 To lines.Count - 1
 
@@ -54,8 +58,14 @@ Public Class FormScanner
                     If splitComma(0) = TextBoxCode.Text Then
 
                         splitComma(4) = splitComma(4) + 1
-                        lines(i) = inputString + splitComma(4)
+
+                        TextBoxCodeArt.Text = splitComma(1)
+                        TextBoxLibelle.Text = splitComma(2)
+                        TextBoxUnite.Text = splitComma(3)
                         TextBoxQuantity.Text = splitComma(4)
+
+                        lines(i) = splitComma(0) + "," + splitComma(1) + "," + splitComma(2) + "," + splitComma(3) + "," + splitComma(4)
+
                         File.WriteAllLines("C:\Users\lange\Documents\test.csv", lines)
 
                     End If
@@ -65,13 +75,15 @@ Public Class FormScanner
 
                 ElseIf Not lines(i).Contains(TextBoxCode.Text) Then ' Si l'article n'existe pas : Créer l'article avec quantité = 1
 
+                    Dim inputString As String = TextBoxCode.Text + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + "1" + vbLf 'Stock dans la variable la string
+
                     If i = lines.Count - 1 Then
 
                         Dim result = MessageBox.Show("Créer l'article avec sa quantité ?", "Article inexistant", MessageBoxButton.YesNo)
 
                         If result = vbYes Then
 
-                            My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString + "1" + vbLf, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
+                            My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
 
                         ElseIf result = vbNo Then
 
