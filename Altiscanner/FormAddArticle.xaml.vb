@@ -72,7 +72,6 @@ Public Class FormAddArticle
 
     End Sub
 
-
     '----------------------------------------------- ECRIRE LIGNE FICHIER CSV -----------------------------------------------'
 
     Private Sub BtnAddArticle_Click(sender As Object, e As RoutedEventArgs) Handles BtnAddArticle.Click
@@ -83,10 +82,33 @@ Public Class FormAddArticle
 
         Else
 
-            ListViewAddArticle.Items.Add(New Data(TextBoxCode.Text, TextBoxCodeArt.Text, TextBoxLibelle.Text, TextBoxUnite.Text, "0")) 'Remplit la liste
+            Dim lines() As String = IO.File.ReadAllLines("C:\Users\lange\Documents\test.csv")
 
-            Dim inputString As String = TextBoxCode.Text + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + "0" + vbLf 'Stock dans la variable la string
-            My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le contenu de la variable inputString
+            For i As Long = 0 To lines.Count - 1
+
+                If lines(i).Contains(TextBoxCode.Text) And TextBoxCode.Text <> "" Then  ' Si le code existe déjà
+
+                    MessageBox.Show("Ce code barre existe déjà.", "Erreur")
+                    TextBoxCode.Clear()
+                    Exit Sub
+
+                End If
+            Next
+
+            If Char.IsDigit(TextBoxCode.Text) And TextBoxCode.Text.Length = 13 Then
+
+                ListViewAddArticle.Items.Add(New Data(TextBoxCode.Text, TextBoxCodeArt.Text, TextBoxLibelle.Text, TextBoxUnite.Text, "0")) 'Remplit la liste
+
+                Dim inputString As String = TextBoxCode.Text + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + "0" + vbLf 'Stock dans la variable la string
+                My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le contenu de la variable inputString
+
+            Else
+
+                MessageBox.Show("Un code doit être composé de 13 numéros.", "Erreur")
+                TextBoxCode.Clear()
+                Exit Sub
+
+            End If
 
         End If
 
@@ -103,28 +125,32 @@ Public Class FormAddArticle
 
             If (ListViewAddArticle.SelectedItems.Count > 0) Then
 
-                Dim lines() As String = IO.File.ReadAllLines("C:\Users\lange\Documents\test.csv")
-                Dim inputString As String = ""
+                Dim lines() As String = File.ReadAllLines("C:\Users\lange\Documents\test.csv")
+
                 For i As Long = 0 To lines.Count - 1
 
-                    If lines(i).Contains(TextBoxCode.Text) Then  ' Si l'article existe : Ajoute + 1 à sa quantité
+                    If lines(i) = lines(ListViewAddArticle.SelectedIndex + 1) Then  'On test l'article avant modification
 
                         Dim splitComma As String() = lines(i).Split(",")
 
                         If splitComma(0) = TextBoxCode.Text Then
 
- 
-                            lines(i) = inputString + splitComma(4)
-                            inputString = TextBoxCode.Text + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + splitComma(4) 'Stock dans la variable la string
+                            lines(i) = splitComma(0) + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + splitComma(4) 'Stock dans la variable la string
 
+                            File.WriteAllLines("C:\Users\lange\Documents\test.csv", lines)
+                            ListViewAddArticle.Items(ListViewAddArticle.SelectedIndex) = New Data(splitComma(0), TextBoxCodeArt.Text, TextBoxLibelle.Text, TextBoxUnite.Text, splitComma(4))
+
+                        ElseIf splitComma(0) <> TextBoxCode.Text Then 'Si code modifié
+
+                            MessageBox.Show("""Code barre"" ne peut pas être modifié.", "Erreur")
+                            TextBoxCode.Text = splitComma(0)
+                            Exit Sub
 
                         End If
-                    End If
-                Next
 
-                lines(ListViewAddArticle.SelectedIndex + 1) = inputString
-                File.WriteAllLines("C:\Users\lange\Documents\test.csv", lines)
-                ListViewAddArticle.Items(ListViewAddArticle.SelectedIndex) = (New Data(TextBoxCode.Text, TextBoxCodeArt.Text, TextBoxLibelle.Text, TextBoxUnite.Text, 0))
+                    End If
+
+                Next
 
             End If
 
@@ -143,11 +169,11 @@ Public Class FormAddArticle
 
         Else
 
-            Dim result = MessageBox.Show("Supprimer l'article ?", "Confirmer la suppression", MessageBoxButton.YesNo)
+            If ListViewAddArticle.SelectedItems.Count > 0 Then
 
-            If result = vbYes Then
+                Dim result = MessageBox.Show("Supprimer l'article ?", "Confirmer la suppression", MessageBoxButton.YesNo)
 
-                If ListViewAddArticle.SelectedItems.Count > 0 Then
+                If result = vbYes Then
 
                     Dim i As Integer = 0
                     Dim lines() As String = IO.File.ReadAllLines("C:\Users\lange\Documents\test.csv")
@@ -170,10 +196,15 @@ Public Class FormAddArticle
 
                     ListViewAddArticle.Items.RemoveAt(ListViewAddArticle.SelectedIndex)
 
+                ElseIf result = vbNo Then
+
+                    Exit Sub
+
                 End If
 
-            ElseIf result = vbNo Then
+            Else
 
+                MessageBox.Show("Aucun article sélécionné.", "Erreur")
                 Exit Sub
 
             End If

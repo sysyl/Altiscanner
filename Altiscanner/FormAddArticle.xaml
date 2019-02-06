@@ -89,7 +89,7 @@
             </ListView.View>
         </ListView>
         <Label Content="Code barre :" HorizontalAlignment="Left" Margin="15,25,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <TextBox IsEnabled="False" Background="LightGray" x:Name="TextBoxCode" HorizontalAlignment="Left" Height="23" Margin="100,25,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox Background="LightGray" x:Name="TextBoxCode" HorizontalAlignment="Left" Height="23" Margin="100,25,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Code article :" HorizontalAlignment="Left" Margin="15,50,0,0" Grid.Row="1" VerticalAlignment="Top"/>
         <TextBox x:Name="TextBoxCodeArt" HorizontalAlignment="Left" Height="23" Margin="100,50,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Libelle :" HorizontalAlignment="Left" Margin="15,75,0,0" Grid.Row="1" VerticalAlignment="Top"/>

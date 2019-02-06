@@ -70,7 +70,7 @@ Public Class FormScanner
 
                     End If
 
-                    Exit Sub
+                        Exit Sub
 
 
                 ElseIf Not lines(i).Contains(TextBoxCode.Text) Then ' Si l'article n'existe pas : Créer l'article avec quantité = 1
@@ -83,7 +83,17 @@ Public Class FormScanner
 
                         If result = vbYes Then
 
-                            My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
+                            If Char.IsDigit(TextBoxCode.Text) And TextBoxCode.Text.Length = 13 Then 'test le code avant écriture
+
+                                My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
+
+                            Else
+
+                                MessageBox.Show("Un code doit être composé de 13 numéros.", "Erreur")
+                                TextBoxCode.Clear()
+                                Exit Sub
+
+                            End If
 
                         ElseIf result = vbNo Then
 
