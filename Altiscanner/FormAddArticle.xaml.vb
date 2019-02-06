@@ -122,7 +122,9 @@ Public Class FormAddArticle
     Private Sub BtnModifyArticle_Click(sender As Object, e As RoutedEventArgs) Handles BtnModifyArticle.Click
 
         If File.Exists("C:\Users\lange\Documents\test.csv") = False Then
+
             MsgBox("Fichier inexistant.")
+
         Else
 
             If (ListViewAddArticle.SelectedItems.Count > 0) Then
@@ -228,37 +230,45 @@ Public Class FormAddArticle
 
     Private Sub BtnAdd_Click(sender As Object, e As RoutedEventArgs)
 
-        If ListViewAddArticle.Items IsNot Nothing Then 'Empeche d'afficher plusieurs la liste dans la ListView
+        If File.Exists("C:\Users\lange\Documents\test.csv") = False Then
 
-            ListViewAddArticle.Items.Clear()
+            MsgBox("Fichier inexistant.")
+
+        Else
+
+            If ListViewAddArticle.Items IsNot Nothing Then 'Empeche d'afficher plusieurs la liste dans la ListView
+
+                ListViewAddArticle.Items.Clear()
+
+            End If
+
+            Using MyReader As New FileIO.TextFieldParser("C:\Users\lange\Documents\test.csv")
+
+                MyReader.TextFieldType = FileIO.FieldType.Delimited
+                MyReader.SetDelimiters(",")
+                MyReader.ReadLine() 'Ignore le header
+
+                Dim currentRow As String()
+
+                While Not MyReader.EndOfData
+
+                    Try
+                        currentRow = MyReader.ReadFields()
+
+                        ListViewAddArticle.Items.Add(New Data(currentRow(0), currentRow(1), currentRow(2), currentRow(3), currentRow(4)))
+
+
+                    Catch ex As FileIO.MalformedLineException
+
+                        MsgBox("Ligne " & ex.Message & "n'est pas valide et sera exclue.")
+
+                    End Try
+
+                End While
+
+            End Using
 
         End If
-
-        Using MyReader As New FileIO.TextFieldParser("C:\Users\lange\Documents\test.csv")
-
-            MyReader.TextFieldType = FileIO.FieldType.Delimited
-            MyReader.SetDelimiters(",")
-            MyReader.ReadLine() 'Ignore le header
-
-            Dim currentRow As String()
-
-            While Not MyReader.EndOfData
-
-                Try
-                    currentRow = MyReader.ReadFields()
-
-                    ListViewAddArticle.Items.Add(New Data(currentRow(0), currentRow(1), currentRow(2), currentRow(3), currentRow(4)))
-
-
-                Catch ex As FileIO.MalformedLineException
-
-                    MsgBox("Ligne " & ex.Message & "n'est pas valide et sera exclue.")
-
-                End Try
-
-            End While
-
-        End Using
 
     End Sub
 
