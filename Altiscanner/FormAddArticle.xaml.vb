@@ -133,7 +133,7 @@ Public Class FormAddArticle
 
                 For i As Long = 0 To lines.Count - 1
 
-                    If lines(i) = lines(ListViewAddArticle.SelectedIndex + 1) Then
+                    If lines(i) = lines(ListViewAddArticle.SelectedIndex + 1) Then 'Test sur la ligne sélectionnée
 
                         Dim splitComma As String() = lines(i).Split(",")
 
@@ -144,8 +144,7 @@ Public Class FormAddArticle
 
                         ElseIf splitComma(0) = TextBoxCode.Text Then 'Si modification sauf code barre
 
-                            lines(i) = splitComma(0) + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + splitComma(4) 'Stock dans la variable la string
-
+                            lines(i) = splitComma(0) + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + splitComma(4)
                             File.WriteAllLines("C:\Users\lange\Documents\test.csv", lines)
                             ListViewAddArticle.Items(ListViewAddArticle.SelectedIndex) = New Data(splitComma(0), TextBoxCodeArt.Text, TextBoxLibelle.Text, TextBoxUnite.Text, splitComma(4))
 
@@ -194,7 +193,7 @@ Public Class FormAddArticle
 
                         For Each line In lines
 
-                            If i <> ListViewAddArticle.SelectedIndex + 1 Then 'Faire + 1 car la listview commence à 0 (alors que le fichier commence à 0 une ligne avant)
+                            If i <> ListViewAddArticle.SelectedIndex + 1 Then 'Faire + 1 car la listview commence à 0 sur le header
 
                                 sw.Write(line + vbLf) 'supprime la ligne sélectionnée et retour chariot dans le fichier
 
@@ -206,7 +205,7 @@ Public Class FormAddArticle
 
                     End Using
 
-                    ListViewAddArticle.Items.RemoveAt(ListViewAddArticle.SelectedIndex)
+                    ListViewAddArticle.Items.RemoveAt(ListViewAddArticle.SelectedIndex) 'supprime de la listview l'item supprimé
 
                 ElseIf result = vbNo Then
 

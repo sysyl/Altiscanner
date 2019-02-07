@@ -42,7 +42,7 @@ Public Class FormListArticles
 
         Else
 
-            If monListView.Items IsNot Nothing Then 'Empeche d'afficher plusieurs la liste dans la ListView
+            If monListView.Items IsNot Nothing Then 'Empeche d'afficher plusieurs fois la liste dans la ListView
 
                 monListView.Items.Clear()
 

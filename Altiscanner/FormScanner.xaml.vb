@@ -31,13 +31,77 @@ Public Class FormScanner
 
     End Class
 
+    '----------------------------------------------- GESTION INTERFACE CODE -----------------------------------------------'
 
-    Public Sub New() 'Focus sur la textBox du Code pour recevoir le scan
+    Public Sub New() 'Focus sur la textBox du Code
+
         InitializeComponent()
         TextBoxCode.Focus()
+
     End Sub
 
-    '----------------------------------------------- VALIDER SCAN -----------------------------------------------'
+    Private Sub TextBoxCode_KeyDown(sender As Object, e As KeyboardEventArgs) Handles TextBoxCode.KeyDown 'Annalyse le code avant validation
+
+        If File.Exists("C:\Users\lange\Documents\test.csv") = False Then
+
+            MessageBox.Show("Scan impossible : Fichier CSV inexistant.", "Erreur")
+
+        Else
+
+            If Char.IsDigit(TextBoxCode.Text) And TextBoxCode.Text.Length = 13 Then 'Test si le code est conforme -> appuyer sur une touche du clavier après insertion du code
+
+                Dim lines() As String = IO.File.ReadAllLines("C:\Users\lange\Documents\test.csv")
+
+                For i As Long = 0 To lines.Count - 1
+
+                    If lines(i).Contains(TextBoxCode.Text) Then  ' Si le code barre existe : Afficher l'article dans les textBox
+
+                        Dim splitComma As String() = lines(i).Split(",")
+
+                        If splitComma(0) = TextBoxCode.Text Then
+
+                            TextBoxCodeArt.Text = splitComma(1)
+                            TextBoxLibelle.Text = splitComma(2)
+                            TextBoxUnite.Text = splitComma(3)
+                            TextBoxQuantity.Text = splitComma(4)
+
+                            TextBoxCodeArt.IsEnabled = False
+                            TextBoxLibelle.IsEnabled = False
+                            TextBoxUnite.IsEnabled = False
+
+                        End If
+
+                        Exit Sub
+
+                    ElseIf Not lines(i).Contains(TextBoxCode.Text) Then ' Si le code barre n'existe pas
+
+                        If i = lines.Count - 1 Then
+
+                            MessageBox.Show("Ce code barre n'existe pas.", "Information")
+
+                            TextBoxCodeArt.Clear()
+                            TextBoxLibelle.Clear()
+                            TextBoxUnite.Clear()
+                            TextBoxQuantity.Clear()
+
+                            TextBoxCodeArt.IsEnabled = True
+                            TextBoxLibelle.IsEnabled = True
+                            TextBoxUnite.IsEnabled = True
+
+                        End If
+
+                    End If
+
+                Next
+
+            End If
+
+        End If
+
+    End Sub
+
+
+    '----------------------------------------------- ECRITURE : VALIDER SCAN -----------------------------------------------'
 
     Private Sub BtnValidate_Click(sender As Object, e As RoutedEventArgs) Handles BtnValidate.Click
 
@@ -51,29 +115,23 @@ Public Class FormScanner
 
             For i As Long = 0 To lines.Count - 1
 
-                If lines(i).Contains(TextBoxCode.Text) Then  ' Si l'article existe : Ajoute + 1 à sa quantité
+                If lines(i).Contains(TextBoxCode.Text) Then  ' Si le code barre existe : Ajoute + 1 à la quantité
 
                     Dim splitComma As String() = lines(i).Split(",")
 
                     If splitComma(0) = TextBoxCode.Text Then
 
                         splitComma(4) = splitComma(4) + 1
-
-                        TextBoxCodeArt.Text = splitComma(1)
-                        TextBoxLibelle.Text = splitComma(2)
-                        TextBoxUnite.Text = splitComma(3)
                         TextBoxQuantity.Text = splitComma(4)
-
                         lines(i) = splitComma(0) + "," + splitComma(1) + "," + splitComma(2) + "," + splitComma(3) + "," + splitComma(4)
-
                         File.WriteAllLines("C:\Users\lange\Documents\test.csv", lines)
 
                     End If
 
-                        Exit Sub
+                    Exit Sub
 
 
-                ElseIf Not lines(i).Contains(TextBoxCode.Text) Then ' Si l'article n'existe pas : Créer l'article avec quantité = 1
+                ElseIf Not lines(i).Contains(TextBoxCode.Text) Then ' Si le code barre n'existe pas : Créer l'article avec quantité = 1
 
                     Dim inputString As String = TextBoxCode.Text + "," + TextBoxCodeArt.Text + "," + TextBoxLibelle.Text + "," + TextBoxUnite.Text + "," + "1" + vbLf 'Stock dans la variable la string
 
@@ -83,15 +141,20 @@ Public Class FormScanner
 
                         If result = vbYes Then
 
-                            If Char.IsDigit(TextBoxCode.Text) And TextBoxCode.Text.Length = 13 Then 'test le code avant écriture
+                            If TextBoxCodeArt.Text = "" Or TextBoxLibelle.Text = "" Or TextBoxUnite.Text = "" Then 'test le code avant écriture
 
-                                My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
+                                MessageBox.Show("Une ou plusieurs cases sont vides.", "Erreur")
+                                Exit Sub
 
                             Else
 
-                                MessageBox.Show("Un code doit être composé de 13 numéros.", "Erreur")
-                                TextBoxCode.Clear()
-                                Exit Sub
+                                TextBoxQuantity.Text = "1"
+
+                                TextBoxCodeArt.IsEnabled = False
+                                TextBoxLibelle.IsEnabled = False
+                                TextBoxUnite.IsEnabled = False
+
+                                My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
 
                             End If
 
