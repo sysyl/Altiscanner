@@ -48,7 +48,7 @@ Public Class FormScanner
 
         Else
 
-            If Char.IsDigit(TextBoxCode.Text) And TextBoxCode.Text.Length = 13 Then 'Test si le code est conforme -> appuyer sur une touche du clavier après insertion du code
+            If TextBoxCode.Text.Length = 13 Then 'Test longueur -> appuyer sur une touche du clavier après insertion du code
 
                 Dim lines() As String = IO.File.ReadAllLines("C:\Users\lange\Documents\test.csv")
 
@@ -76,6 +76,19 @@ Public Class FormScanner
                     ElseIf Not lines(i).Contains(TextBoxCode.Text) Then ' Si le code barre n'existe pas
 
                         If i = lines.Count - 1 Then
+
+                            For Each Ch As Char In TextBoxCode.Text
+
+                                If Not Char.IsNumber(Ch) Then
+
+                                    MessageBox.Show("Le code barre doit contenir seulement des chiffres.", "Erreur")
+                                    TextBoxCode.Clear()
+
+                                    Exit Sub
+
+                                End If
+
+                            Next
 
                             MessageBox.Show("Ce code barre n'existe pas.", "Information")
 
@@ -146,15 +159,41 @@ Public Class FormScanner
                                 MessageBox.Show("Une ou plusieurs cases sont vides.", "Erreur")
                                 Exit Sub
 
-                            Else
+                            ElseIf TextBoxCode.Text.Length <> 13 Then
 
-                                TextBoxQuantity.Text = "1"
+                                MessageBox.Show("Longueur du code barre non valide.", "Erreur")
+                                Exit Sub
 
-                                TextBoxCodeArt.IsEnabled = False
-                                TextBoxLibelle.IsEnabled = False
-                                TextBoxUnite.IsEnabled = False
+                            Else 'Test si le code est numérique
 
-                                My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
+                                Dim bool As Boolean = True
+
+                                For Each Ch As Char In TextBoxCode.Text
+
+                                        If Not Char.IsNumber(Ch) Then
+
+                                            bool = False
+
+                                        End If
+
+                                    Next
+
+                                If bool = False Then
+
+                                    MessageBox.Show("Le code barre doit contenir seulement des chiffres.", "Erreur")
+                                    TextBoxCode.Clear()
+
+                                Else 'Ecriture
+
+                                    TextBoxQuantity.Text = "1"
+
+                                    TextBoxCodeArt.IsEnabled = False
+                                    TextBoxLibelle.IsEnabled = False
+                                    TextBoxUnite.IsEnabled = False
+
+                                    My.Computer.FileSystem.WriteAllText("C:\Users\lange\Documents\test.csv", inputString, True) 'Ecrit dans le fichier le nouvel article avec sa quantité à 1
+
+                                End If
 
                             End If
 
