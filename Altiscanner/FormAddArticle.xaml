@@ -64,7 +64,7 @@
         </Grid.RowDefinitions>
         <Button  Grid.Row="2" x:Name="BtnReturnMenu" Template = "{StaticResource ButtonTemplate}" Content="RETOUR" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Height="75" Margin="15"/>
         <Button Grid.Row="0" x:Name="BtnAdd" Template = "{StaticResource ButtonTemplate}" Content="VOIR LISTE" HorizontalAlignment="Right" VerticalAlignment="TOP" Width="75" Height="75" Margin="15"  Click="BtnAdd_Click"/>
-        <ListView Background="LightGray" Grid.Row="0" Name="ListViewAddArticle" ItemsSource="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" Height="135" Margin="15,15,0,0">
+        <ListView Background="LightGray" Grid.Row="0" Name="ListViewAddArticle" ItemsSource="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400" Height="135" Margin="15,15,0,0">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
@@ -88,14 +88,16 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Label Content="Code barre :" HorizontalAlignment="Left" Margin="15,25,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <TextBox Background="LightGray" x:Name="TextBoxCode" HorizontalAlignment="Left" Height="23" Margin="100,25,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Code article :" HorizontalAlignment="Left" Margin="15,50,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBoxCodeArt" HorizontalAlignment="Left" Height="23" Margin="100,50,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Libelle :" HorizontalAlignment="Left" Margin="15,75,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBoxLibelle" HorizontalAlignment="Left" Height="23" Margin="100,75,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Unite :" HorizontalAlignment="Left" Margin="15,100,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBoxUnite" HorizontalAlignment="Left" Height="23" Margin="100,100,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15" Background="LightSteelBlue">
+            <Label Content="Code barre :"/>
+            <TextBox Background="LightGray" x:Name="TextBoxCode" Height="20" TextWrapping="Wrap" Width="120" HorizontalAlignment="Center"/>
+            <Label Content="Code article :"/>
+            <TextBox x:Name="TextBoxCodeArt" Height="20" TextWrapping="Wrap" Width="120"  HorizontalAlignment="Center"/>
+            <Label Content="Libelle :"/>
+            <TextBox x:Name="TextBoxLibelle"  Height="20" TextWrapping="Wrap" Width="120"  HorizontalAlignment="Center"/>
+            <Label Content="Unite :"/>
+            <TextBox x:Name="TextBoxUnite" Height="20" TextWrapping="Wrap" Width="120"  HorizontalAlignment="Center"/>
+        </StackPanel>
         <Button Grid.Row="1" x:Name="BtnAddArticle" Template = "{StaticResource ButtonTemplate}" Content="AJOUTER" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="75" Margin="15"/>
         <Button Grid.Row="1" x:Name="BtnModifyArticle" Template = "{StaticResource ButtonTemplate}" Content="MODIFIER" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="75" Margin="0,100,15,0"/>
         <Button Grid.Row="1" x:Name="BtnDeleteArticle" Template = "{StaticResource ButtonTemplate}" Content="SUPPRIMER" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="75" Margin="0,185,15,0"/>
