@@ -31,6 +31,40 @@ Public Class FormListArticles
 
     End Class
 
+    '----------------------------------------------- RECHERCHE ARTICLE -----------------------------------------------'
+
+    Private Sub Recherche_TextChanged(sender As Object, e As RoutedEventArgs) Handles TextBoxRecherche.TextChanged
+
+        If File.Exists("C:\Users\lange\Documents\test.csv") = False Then
+
+            MsgBox("Fichier inexistant.")
+
+        Else
+
+            If monListViewRecherche.Items IsNot Nothing Then 'Empeche d'afficher plusieurs fois la recherche dans la ListView
+
+                monListViewRecherche.Items.Clear()
+
+            End If
+
+            Dim lines() As String = File.ReadAllLines("C:\Users\lange\Documents\test.csv")
+
+            For i As Long = 0 To lines.Count - 1
+
+                Dim splitComma As String() = lines(i).Split(",")
+
+                If lines(i).Contains(TextBoxRecherche.Text) And TextBoxRecherche.Text <> "" Then
+
+                    monListViewRecherche.Items.Add(New Data(splitComma(0), splitComma(1), splitComma(2), splitComma(3), splitComma(4)))
+
+                End If
+
+            Next
+
+        End If
+
+    End Sub
+
 
     '----------------------------------------------- VOIR LISTE -----------------------------------------------'
 

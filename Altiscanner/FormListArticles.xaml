@@ -59,12 +59,18 @@
 
     <Grid Background="AliceBlue">
         <Grid.RowDefinitions>
-            <RowDefinition  Height="300*"></RowDefinition>
             <RowDefinition  Height="200*"></RowDefinition>
+            <RowDefinition  Height="300*"></RowDefinition>
             <RowDefinition  Height="110*"></RowDefinition>
         </Grid.RowDefinitions>
         <Button x:Name="BtnReturnMenu" Template = "{StaticResource ButtonTemplate}" Grid.Row="2" Content="RETOUR" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Height="75" Margin="0,0,14.667,14.667"/>
-        <ListView Background="LightGray" Grid.Row="0" Name="monListView" ItemsSource="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="500" Height="225" Margin="200,15,173.667,0">
+
+        <WrapPanel Grid.Row="0" HorizontalAlignment="Center" Margin="10">
+            <Label Content="Rechercher :"/>
+            <TextBox Background="LightSteelBlue" x:Name="TextBoxRecherche" TextWrapping="Wrap" Width="425"/>
+        </WrapPanel>
+
+        <ListView Background="LightGray" Grid.Row="0" Name="monListViewRecherche" ItemsSource="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="500" Height="100" Margin="50">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
@@ -92,6 +98,36 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="BtnAdd" Template = "{StaticResource ButtonTemplate}" Grid.Row="0" Content="VOIR LISTE" HorizontalAlignment="Right" VerticalAlignment="TOP" Width="75" Height="75" Margin="15"  Click="BtnAdd_Click"/>
+
+        <ListView Background="LightGray" Grid.Row="1" Name="monListView" ItemsSource="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="500" Height="225" Margin="15">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn
+                        Width='100' 
+                        Header='Code barre'
+                        DisplayMemberBinding='{Binding Path=CodeBarre}' />
+                        <GridViewColumn
+                        Width='100'
+                        Header='Code article'
+                        DisplayMemberBinding='{Binding Path=CodeArt}' />
+                        <GridViewColumn
+                        Width='100'
+                        Header='Libellé'
+                        DisplayMemberBinding='{Binding Path=Libelle}' />
+                        <GridViewColumn
+                        Width='100'
+                        Header='Unité'
+                        DisplayMemberBinding='{Binding Path=Unite}' />
+                        <GridViewColumn
+                        Width='100'
+                        Header='Quantité'
+                        DisplayMemberBinding='{Binding Path=Quantite}' />
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="BtnAdd" Template = "{StaticResource ButtonTemplate}" Grid.Row="1" Content="VOIR LISTE" HorizontalAlignment="Right" VerticalAlignment="TOP" Width="75" Height="75" Margin="15"  Click="BtnAdd_Click"/>
+        
     </Grid>
 </Window>
